@@ -7,9 +7,9 @@ CFLAGS = -std=c18 -Wpedantic -Wall -Wextra -Wconversion -Wwrite-strings\
 
 LDFLAGS = -Wl,-z,relro,-z,now -pie
 
-OBJECTS = singleStringText_generator.o wordList_generator.o demo.o
+OBJECTS = singleStringText_generator.o wordList_generator.o demo.o averageTimes.o
 
-PROGS = singleStringText_generator wordList_generator demo
+PROGS = singleStringText_generator wordList_generator demo averageTimes
 
 all: $(PROGS) 
 
@@ -20,6 +20,9 @@ wordList_generator: wordList_generator.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 demo: demo.o
+	$(CC) $(LDFLAGS) -o $@ $^
+
+averageTimes: averageTimes.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 clean:
