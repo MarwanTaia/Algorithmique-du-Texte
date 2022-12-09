@@ -155,30 +155,28 @@ int naifSentinelle(char* text, char* word, int textLength, int wordLength) {
     // Ajout de la sentinelle.
     text[textLength] = word[wordLength - 1];
 
+    // Recherche du mot dans le texte (boucle rapide).
     // On stocke le dernier caractère du mot dans une variable.
     char lastChar = word[wordLength - 1];
-    // Recherche du mot dans le texte (boucle rapide) avec un while pour la
-    // sentinelle.
-    int i = 0;
-    while (lastChar != text[i + wordLength - 1]) {
-        i++;
-    }
-    // Si on est arrivé à la fin du texte, on renvoie -1.
-    if (i == textLength) {
-        return -1;
-    }
-
-    // Boucle interne.
-    for (int j = 0; j < wordLength; j++) {
-        // Si le caractère du texte est différent du caractère du mot, on sort
-        // de la boucle interne.
-        if (text[i + j] != word[j]) {
-            break;
+    for (int i = 0; i < textLength - wordLength + 1; i++) {
+        // Si le dernier caractère du mot est différent du dernier caractère du
+        // texte, on passe au caractère suivant du texte.
+        if (lastChar != text[i + wordLength - 1]) {
+            continue;
         }
-        // Si on est arrivé à la fin du mot, on renvoie l'indice du premier
-        // caractère du mot dans le texte.
-        if (j == wordLength - 1) {
-            return i;
+
+        // Boucle interne.
+        for (int j = 0; j < wordLength; j++) {
+            // Si le caractère du texte est différent du caractère du mot, on
+            // sort de la boucle interne.
+            if (text[i + j] != word[j]) {
+                break;
+            }
+            // Si on est arrivé à la fin du mot, on renvoie l'indice du premier
+            // caractère du mot dans le texte.
+            if (j == wordLength - 1) {
+                return i;
+            }
         }
     }
 
@@ -329,8 +327,10 @@ int naifSentinelleStrncmp(char* text, char* word, int textLength, int wordLength
             i += 1;
         } else {
             // Le mot a été trouvé, on renvoie l'indice du premier caractère du
-            // mot dans le texte.
-            return i;
+            // mot dans le texte s'il ne s'agit pas de la sentinelle.
+            if (i != textLength) {
+                return i;
+            }
         }
     }
 
