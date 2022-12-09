@@ -327,10 +327,8 @@ int naifSentinelleStrncmp(char* text, char* word, int textLength, int wordLength
             i += 1;
         } else {
             // Le mot a été trouvé, on renvoie l'indice du premier caractère du
-            // mot dans le texte s'il ne s'agit pas de la sentinelle.
-            if (i != textLength) {
-                return i;
-            }
+            // mot dans le texte.
+            return i;
         }
     }
 
