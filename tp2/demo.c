@@ -180,6 +180,51 @@ double computeAverage(double* values, int length) {
 }
 
 /**
+ * Fonction qui mesure le temps moyen d'exécution de l'algorithme pris en 
+ * paramètre. Pour cela, on exécute lit la liste de mots dans le fichier
+ * file, et on mesure le temps moyen d'exécution de l'algorithme sur chaque
+ * mot de la liste.
+ * Renvoie le temps moyen d'exécution de l'algorithme (en ms) en cas de succès,
+ * -1 sinon.
+ * 
+ * @param algo algorithme de recherche exacte à utiliser.
+ * @param file pointeur de fichier vers le fichier contenant la liste de mots.
+ * @param text texte dans lequel chercher les mots de la liste.
+ * @param textLength longueur du texte.
+ * @param wordListLength longueur de la liste de mots.
+ * @param wordLength longueur des mots de la liste.
+ * @return temps moyen d'exécution de l'algorithme (en ms) en cas de succès,
+ * -1 sinon.
+ */
+double measureTime(int (*algo)(char*, char*, int, int), FILE* file, char* text, int textLength, int wordListLength, int wordLength) {
+    // Initialisations
+    int err = 0;
+    // Tableau de temps d'exécution
+    double times[wordListLength];
+
+    // On lit chaque mot de la liste
+    for (int i = 0; i < wordListLength; i++) {
+        // On lit le mot
+        char word[wordLength + 1];
+        if (fgets(word, wordLength + 1, file) == NULL) {
+            return -1;
+        }
+        // On mesure le temps d'exécution de l'algorithme
+        clock_t start = clock();
+        err = runAlgo(algo, text, word, textLength, wordLength);
+        clock_t end = clock();
+        // Test d'erreur
+        if (err == -1) {
+            return -1;
+        }
+        // On stocke le temps d'exécution dans le tableau
+        times[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    }
+    // On renvoie la moyenne des temps d'exécution
+    return computeAverage(times, wordListLength);
+}
+
+/**
  * Fonction qui lit la liste de mots dans le fichier demo_wordList.txt, et
  * mesure le temps moyen d'exécution de chaque algorithme de recherche exacte.
  * Pour chaque algorithme, on affiche le temps moyen d'exécution sur la recherche
