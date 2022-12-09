@@ -1,52 +1,58 @@
-# #!/bin/bash
-
-# # Set the length of the text
-# text_length=500000
-
-# # Set the alphabet sizes
-# alphabet_sizes=(2 4 20 70)
-
-# # Loop through the alphabet sizes
-# for alphabet_size in "${alphabet_sizes[@]}"
-# do
-#     # Execute the singleStringText_generator program with the specified arguments
-#     ./singleStringText_generator $text_length $alphabet_size output_file_$alphabet_size
-# done
-
 #!/bin/bash
 
-# Set the text length and alphabet sizes
-text_length=500000
+# Liste des tailles d'alphabet à utiliser
 alphabet_sizes=(2 4 20 70)
 
-# Set the list lengths and word lengths
-list_lengths=(100)
+# La longueur du texte à générer
+text_length=500000
+
+# La liste des longueurs de mots à utiliser
 word_lengths=(4 5 6 7 8 9 10 15 20 30 40 50)
 
-# Loop through the alphabet sizes
-for alphabet_size in "${alphabet_sizes[@]}"
-do
-    # Generate a text file using singleStringText_generator
-    ./singleStringText_generator $text_length $alphabet_size text_$alphabet_size.txt
+# La longueur des listes à générer
+list_length=100
 
-    # Loop through the list lengths
-    for list_length in "${list_lengths[@]}"
-    do
-        # Loop through the word lengths
-        for word_length in "${word_lengths[@]}"
-        do
-            # Generate a word list using wordList_generator
-            ./wordList_generator $list_length $word_length $alphabet_size list_${list_length}_${word_length}_$alphabet_size.txt
+# La liste des numéros d'algorithmes à utiliser
+algo_nums=(1 2 3 4 5 6 7)
 
-            # Store the output of the demo program in an array
-            output_array=($(./demo text_$alphabet_size.txt list_${list_length}_${word_length}_$alphabet_size.txt))
+# Le nom du répertoire de sortie
+output_dir="output"
 
-            # Loop through the elements in the output array
-            for output in "${output_array[@]}"
-            do
-                # Append the output to the CSV file, along with the alphabet size
-                echo "$alphabet_size,$output" >> output.csv
-            done
-        done
-    done
+# Créer le répertoire de sortie
+mkdir -p "$output_dir"
+
+# Créer un répertoire temporaire
+temp_dir=$(mktemp -d)
+
+# Générer les fichiers de texte avec singleStringText_generator
+for size in "${alphabet_sizes[@]}"; do
+  ./singleStringText_generator $text_length $size "$temp_dir/text-$size.txt"
 done
+
+# Générer les fichiers de liste avec wordList_generator
+for size in "${alphabet_sizes[@]}"; do
+  for length in "${word_lengths[@]}"; do
+    ./wordList_generator $list_length $length $size "$temp_dir/list-$length-$size.txt"
+  done
+done
+
+# Pour chaque algorithme
+for algo_num in "${algo_nums[@]}"; do
+  # Créer un fichier CSV
+  csv_file="$output_dir/algo-$algo_num.csv"
+  touch "$csv_file"
+  # Écrire l'en-tête du fichier CSV
+  echo "wordLength,alphabetSize,result" > "$csv_file"
+  for size in "${alphabet_sizes[@]}"; do
+    for length in "${word_lengths[@]}"; do
+      text_file="$temp_dir/text-$size.txt"
+      list_file="$temp_dir/list-$length-$size.txt"
+      # Exécuter l'algorithme et écrire le résultat dans le fichier CSV
+      result=$(./averageTimes $text_length $size $length $list_length $algo_num "$text_file" "$list_file")
+      echo "$length,$size,$result" >> "$csv_file"
+    done
+  done
+done
+
+# Supprimer le répertoire temporaire
+rm -r "$temp_dir"
