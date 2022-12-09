@@ -259,138 +259,63 @@ int testAlgos(char* text, int textLength, int wordListLength, int wordLength) {
     // On revient au début du fichier.
     rewind(file);
 
-    // Tableau de temps d'exécution pour l'algorithme naïf, avec boucle rapide, sans sentinelle.
-    double naifBoucleRapideTimes[wordListLength];
-    // Algorithme naïf, avec boucle rapide, sans sentinelle.
+    // Mesure du temps d'exécution de l'algorithme naïf, avec boucle rapide, sans sentinelle.
     printf("Algo naïf, avec boucle rapide, sans sentinelle : ");
-    // On lit chaque mot de la liste.
-    for (int i = 0; i < wordListLength; i++) {
-        // On lit le mot.
-        char word[wordLength + 1];
-        if (fgets(word, wordLength + 1, file) == NULL) {
-            return -1;
-        }
-        // On mesure le temps (en millisecondes) d'exécution de l'algorithme
-        clock_t start = clock();
-        err = runAlgo(naifBoucleRapide, text, word, textLength, wordLength);
-        clock_t end = clock();
-        // Test d'erreur. Si la recherche a échoué, on renvoie -1.
-        if (err == -1) {
-            return -1;
-        }
-        // On stocke le temps d'exécution dans le tableau.
-        naifBoucleRapideTimes[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    err = measureTime(&naifBoucleRapide, file, text, textLength, wordListLength, wordLength);
+    // Test d'erreur. Si la mesure a échoué, on renvoie -1.
+    if (err == -1) {
+        return -1;
     }
-    // On affiche le temps moyen d'exécution.
-    printf("%f(ms)\n", computeAverage(naifBoucleRapideTimes, wordListLength));
+    // Affichage du temps d'exécution.
+    printf("%f (ms)\n", err);
     // On revient au début du fichier.
     rewind(file);
 
-    // Tableau de temps d'exécution pour l'algorithme naïf, avec boucle rapide, avec sentinelle.
-    double naifBoucleRapideSentinelleTimes[wordListLength];
-    // Algorithme naïf, avec boucle rapide, avec sentinelle.
+    // Mesure du temps d'exécution de l'algorithme naïf, avec boucle rapide, avec sentinelle.
     printf("Algo naïf, avec boucle rapide, avec sentinelle : ");
-    // On lit chaque mot de la liste.
-    for (int i = 0; i < wordListLength; i++) {
-        // On lit le mot.
-        char word[wordLength + 1];
-        if (fgets(word, wordLength + 1, file) == NULL) {
-            return -1;
-        }
-        // On mesure le temps (en millisecondes) d'exécution de l'algorithme
-        clock_t start = clock();
-        err = runAlgo(naifSentinelle, text, word, textLength, wordLength);
-        clock_t end = clock();
-        // Test d'erreur. Si la recherche a échoué, on renvoie -1.
-        if (err == -1) {
-            return -1;
-        }
-        // On stocke le temps d'exécution dans le tableau.
-        naifBoucleRapideSentinelleTimes[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    err = measureTime(&naifSentinelle, file, text, textLength, wordListLength, wordLength);
+    // Test d'erreur. Si la mesure a échoué, on renvoie -1.
+    if (err == -1) {
+        return -1;
     }
-    // On affiche le temps moyen d'exécution.
-    printf("%f(ms)\n", computeAverage(naifBoucleRapideSentinelleTimes, wordListLength));
+    // Affichage du temps d'exécution.
+    printf("%f (ms)\n", err);
     // On revient au début du fichier.
     rewind(file);
 
-    // Tableau de temps d'exécution pour l'algorithme naïf avec strncmp, sans boucle rapide, sans sentinelle.
-    double naifStrncmpTimes[wordListLength];
-    // Algorithme naïf avec strncmp, sans boucle rapide, sans sentinelle.
+    // Mesure du temps d'exécution de l'algorithme naïf avec strncmp, sans boucle rapide, sans sentinelle.
     printf("Algo naïf avec strncmp, sans boucle rapide, sans sentinelle : ");
-    // On lit chaque mot de la liste.
-    for (int i = 0; i < wordListLength; i++) {
-        // On lit le mot.
-        char word[wordLength + 1];
-        if (fgets(word, wordLength + 1, file) == NULL) {
-            return -1;
-        }
-        // On mesure le temps (en millisecondes) d'exécution de l'algorithme
-        clock_t start = clock();
-        err = runAlgo(naifStrncmp, text, word, textLength, wordLength);
-        clock_t end = clock();
-        // Test d'erreur. Si la recherche a échoué, on renvoie -1.
-        if (err == -1) {
-            return -1;
-        }
-        // On stocke le temps d'exécution dans le tableau.
-        naifStrncmpTimes[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    err = measureTime(&naifStrncmp, file, text, textLength, wordListLength, wordLength);
+    // Test d'erreur. Si la mesure a échoué, on renvoie -1.
+    if (err == -1) {
+        return -1;
     }
-    // On affiche le temps moyen d'exécution.
-    printf("%f(ms)\n", computeAverage(naifStrncmpTimes, wordListLength));
+    // Affichage du temps d'exécution.
+    printf("%f (ms)\n", err);
     // On revient au début du fichier.
     rewind(file);
 
-    // Tableau de temps d'exécution pour l'algorithme naïf avec strncmp, avec boucle rapide, sans sentinelle.
-    double naifStrncmpBoucleRapideTimes[wordListLength];
-    // Algorithme naïf avec strncmp, avec boucle rapide, sans sentinelle.
+    // Mesure du temps d'exécution de l'algorithme naïf avec strncmp, avec boucle rapide, sans sentinelle.
     printf("Algo naïf avec strncmp, avec boucle rapide, sans sentinelle : ");
-    // On lit chaque mot de la liste.
-    for (int i = 0; i < wordListLength; i++) {
-        // On lit le mot.
-        char word[wordLength + 1];
-        if (fgets(word, wordLength + 1, file) == NULL) {
-            return -1;
-        }
-        // On mesure le temps (en millisecondes) d'exécution de l'algorithme
-        clock_t start = clock();
-        err = runAlgo(naifRapideStrncmp, text, word, textLength, wordLength);
-        clock_t end = clock();
-        // Test d'erreur. Si la recherche a échoué, on renvoie -1.
-        if (err == -1) {
-            return -1;
-        }
-        // On stocke le temps d'exécution dans le tableau.
-        naifStrncmpBoucleRapideTimes[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    err = measureTime(&naifRapideStrncmp, file, text, textLength, wordListLength, wordLength);
+    // Test d'erreur. Si la mesure a échoué, on renvoie -1.
+    if (err == -1) {
+        return -1;
     }
-    // On affiche le temps moyen d'exécution.
-    printf("%f(ms)\n", computeAverage(naifStrncmpBoucleRapideTimes, wordListLength));
+    // Affichage du temps d'exécution.
+    printf("%f (ms)\n", err);
     // On revient au début du fichier.
     rewind(file);
 
-    // Tableau de temps d'exécution pour l'algorithme naïf avec strncmp, avec boucle rapide, avec sentinelle.
-    double naifStrncmpBoucleRapideSentinelleTimes[wordListLength];
-    // Algorithme naïf avec strncmp, avec boucle rapide, avec sentinelle.
+    // Mesure du temps d'exécution de l'algorithme naïf avec strncmp, avec boucle rapide, avec sentinelle.
     printf("Algo naïf avec strncmp, avec boucle rapide, avec sentinelle : ");
-    // On lit chaque mot de la liste.
-    for (int i = 0; i < wordListLength; i++) {
-        // On lit le mot.
-        char word[wordLength + 1];
-        if (fgets(word, wordLength + 1, file) == NULL) {
-            return -1;
-        }
-        // On mesure le temps (en millisecondes) d'exécution de l'algorithme
-        clock_t start = clock();
-        err = runAlgo(naifSentinelleStrncmp, text, word, textLength, wordLength);
-        clock_t end = clock();
-        // Test d'erreur. Si la recherche a échoué, on renvoie -1.
-        if (err == -1) {
-            return -1;
-        }
-        // On stocke le temps d'exécution dans le tableau.
-        naifStrncmpBoucleRapideSentinelleTimes[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    err = measureTime(&naifSentinelleStrncmp, file, text, textLength, wordListLength, wordLength);
+    // Test d'erreur. Si la mesure a échoué, on renvoie -1.
+    if (err == -1) {
+        return -1;
     }
-    // On affiche le temps moyen d'exécution.
-    printf("%f(ms)\n", computeAverage(naifStrncmpBoucleRapideSentinelleTimes, wordListLength));
+    // Affichage du temps d'exécution.
+    printf("%f (ms)\n", err);
     // On revient au début du fichier.
     rewind(file);
 
