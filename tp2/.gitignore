@@ -1,0 +1,6 @@
+# Ignore text files
+demo_text.txt
+demo_wordList.txt
+
+# Ignore VSCode configuration files
+.vscode/
