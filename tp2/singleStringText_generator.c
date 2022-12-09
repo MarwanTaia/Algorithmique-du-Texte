@@ -49,7 +49,7 @@ char* generateText(int textLength, int alphabetSize) {
 
     // Génération du texte.
     for (int i = 0; i < textLength; i++) {
-        text[i] = (char) (rand() % alphabetSize + 'A');
+        text[i] = (char) (rand() % alphabetSize + '!');
     }
     // Succès, on renvoie le texte généré.
     return text;
