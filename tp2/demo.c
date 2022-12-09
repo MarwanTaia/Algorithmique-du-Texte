@@ -245,32 +245,17 @@ int testAlgos(char* text, int textLength, int wordListLength, int wordLength) {
         return -1;
     }
     // Initialisation de variables.
-    int err = 0;
+    double err = 0;
 
-    // Tableau de temps d'exécution pour l'algorithme naïf.
-    double naiveTimes[wordListLength];
-    // Algorithme naïf.
-    printf("Algo naïf : ");
-    // On lit chaque mot de la liste.
-    for (int i = 0; i < wordListLength; i++) {
-        // On lit le mot.
-        char word[wordLength + 1];
-        if (fgets(word, wordLength + 1, file) == NULL) {
-            return -1;
-        }
-        // On mesure le temps (en millisecondes) d'exécution de l'algorithme
-        clock_t start = clock();
-        err = runAlgo(naif, text, word, textLength, wordLength);
-        clock_t end = clock();
-        // Test d'erreur. Si la recherche a échoué, on renvoie -1.
-        if (err == -1) {
-            return -1;
-        }
-        // On stocke le temps d'exécution dans le tableau.
-        naiveTimes[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    // Mesure du temps d'exécution de l'algorithme naïf, sans boucle rapide, sans sentinelle.
+    printf("Algo naïf, sans boucle rapide, sans sentinelle : ");
+    err = measureTime(&naif, file, text, textLength, wordListLength, wordLength);
+    // Test d'erreur. Si la mesure a échoué, on renvoie -1.
+    if (err == -1) {
+        return -1;
     }
-    // On affiche le temps moyen d'exécution.
-    printf("%f(ms)\n", computeAverage(naiveTimes, wordListLength));
+    // Affichage du temps d'exécution.
+    printf("%f (ms)\n", err);
     // On revient au début du fichier.
     rewind(file);
 
