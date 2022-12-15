@@ -503,3 +503,91 @@ int knuthMorrisPratt(char* text, char* word, int textLength, int wordLength, int
     // Le mot n'a pas été trouvé, on renvoie -1.
     return -1;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+/*
+ * Fonction qui calcule la table Suff de Boyer-Moore.
+ *
+ * @param word mot pour lequel calculer la table Suff.
+ * @param wordLength longueur du mot.
+ * @param suff table Suff.
+ * @return 0 en cas de succès, -1 en cas d'erreur.
+ */
+void suffTable(char* word, int wordLength, int* suff) {
+    // Initialize the suffix table with the default values.
+    for (int i = 0; i < wordLength; i++) {
+        suff[i] = wordLength;
+    }
+
+    // Compute the suffix table for the word.
+    for (int i = wordLength - 2; i >= 0; i--) {
+        int j = i;
+        while (j >= 0 && word[j] == word[wordLength - 1 - i + j]) {
+            j--;
+        }
+        suff[i] = i - j;
+    }
+}
+
+/*
+ * Fonction qui calcule la table Good de Boyer-Moore.
+ *
+ * @param word mot pour lequel calculer la table BonSuff.
+ * @param wordLength longueur du mot.
+ * @param suff table Suff.
+ * @param good table Good.
+ * @return 0 en cas de succès, -1 en cas d'erreur.
+ */
+void bonSuffTable(char* word, int wordLength, int* bonSuff) {
+    // Initialize the bad-character table with the default values.
+    for (int i = 0; i < 256; i++) {
+        bonSuff[i] = wordLength;
+    }
+
+    // Compute the bad-character table for the word.
+    for (int i = 0; i < wordLength - 1; i++) {
+        bonSuff[(int) word[i]] = wordLength - 1 - i;
+    }
+}
+
+/*
+ * Searches for the given word in the given text using the Boyer-Moore algorithm.
+ *
+ * @param text the text in which to search for the word.
+ * @param textLength the length of the text.
+ * @param word the word to search for in the text.
+ * @param wordLength the length of the word.
+ * @param suff the suffix table for the word.
+ * @param bonSuff the bad-character table for the word.
+ * @return the index of the first character of the word in the text, if the word
+ *         is found, or -1 if the word is not found.
+ */
+int boyerMoore(char* text, int textLength, char* word, int wordLength, int* suff, int* bonSuff) {
+    // Start at the last character of the word.
+    int i = wordLength - 1;
+    // Loop while there are still characters to check in the text.
+    while (i < textLength) {
+        // Start at the last character of the word.
+        int j = wordLength - 1;
+        // Loop while the characters match.
+        while (j >= 0 && text[i] == word[j]) {
+            // Move to the previous character.
+            i--;
+            j--;
+        }
+        // If the whole word has been checked, return the index of the first
+        // character of the word in the text.
+        if (j == -1) {
+            return i + 1;
+        }
+        // Move to the next character in the text.
+        if (bonSuff[(int) text[i]] > suff[j]) {
+            i += bonSuff[(int) text[i]];
+        } else {
+            i += suff[j];
+        }
+    }
+    // The word was not found.
+    return -1;
+}
