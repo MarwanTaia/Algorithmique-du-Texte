@@ -9,7 +9,9 @@ from plotly.subplots import make_subplots
 csv_dir = "output"
 
 # Mapping from algorithm number to subplot number
-subplot_map = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7}
+subplot_map = {}
+for i in range(1, 8):
+    subplot_map[i] = i
 
 # Alphabet sizes to plot
 alphabet_sizes = [2, 4, 20, 70]
