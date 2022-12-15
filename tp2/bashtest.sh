@@ -38,13 +38,14 @@ done
 
 # Pour chaque algorithme
 for algo_num in "${algo_nums[@]}"; do
-  # Créer un fichier CSV
-  csv_file="$output_dir/algo-$algo_num.csv"
-  touch "$csv_file"
-  # Écrire l'en-tête du fichier CSV
-  echo "wordLength,alphabetSize,result" > "$csv_file"
   for size in "${alphabet_sizes[@]}"; do
+    # Créer le fichier CSV
+    csv_file="$output_dir/averageTimes-$algo_num-$size.csv"
+    touch "$csv_file"
+    echo "word_length,alphabet_size,average_time" > "$csv_file"
+    # Pour chaque longueur de mot
     for length in "${word_lengths[@]}"; do
+      # Définir les noms des fichiers de texte et de liste
       text_file="$temp_dir/text-$size.txt"
       list_file="$temp_dir/list-$length-$size.txt"
       # Exécuter l'algorithme et écrire le résultat dans le fichier CSV
