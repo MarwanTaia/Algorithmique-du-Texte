@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-# Directory containing the CSV files
+# Répertoire contenant les fichiers CSV
 csv_dir = "output"
 
 subplot_titles_list = [
@@ -21,15 +21,15 @@ subplot_titles_list = [
     "Horspool"
 ]
 
-# Mapping from algorithm number to subplot number
+# Mapper depuis le numéro de l'algorithme à la position du subplot
 subplot_map = {}
 for i in range(1, len(subplot_titles_list) + 1):
     subplot_map[i] = i
 
-# Alphabet sizes to plot
+# Tailles de l'alphabet à tester
 alphabet_sizes = [2, 4, 20, 70]
 
-# Create figure with subplots
+# Créer un subplot
 fig = make_subplots(
     rows=4,
     cols=3,
@@ -38,17 +38,17 @@ fig = make_subplots(
     # y_title="Average time (s)",
 )
 
-# Loop through algorithm numbers
+# Itérer sur les numéros d'algorithme
 for algo_num in range(1, len(subplot_titles_list) + 1):
-    # Create subplot for this algorithm number
+    # Créer un subplot pour ce numéro d'algorithme
     subplot = subplot_map[int(algo_num)]
 
-    # Loop through alphabet sizes
+    # Itérer sur les tailles de l'alphabet
     for size in alphabet_sizes:
-        # Read CSV file for this algorithm number and alphabet size into DataFrame
+        # Lire le fichier CSV pour ce numéro d'algorithme et cette taille d'alphabet dans un DataFrame
         df = pd.read_csv(f"{csv_dir}/averageTimes-{algo_num}-{size}.csv")
 
-        # Add line plot for this alphabet size to subplot
+        # Ajouter un graphique pour cette taille d'alphabet au subplot
         fig.add_scatter(
             x=df["alphabet_size"],
             y=df["average_time"],
@@ -74,7 +74,7 @@ fig.update_layout(
 # Show figure
 fig.show()
 
-# Create figure with subplots
+# Créer un subplot
 fig2 = make_subplots(
     rows=3,
     cols=3,
@@ -83,17 +83,17 @@ fig2 = make_subplots(
     # y_title="Average time (s)",
 )
 
-# Loop through algorithm numbers
+# Itérer sur les numéros d'algorithme
 for algo_num in range(1, len(subplot_titles_list)):
-    # Create subplot for this algorithm number
+    # Créer un subplot pour ce numéro d'algorithme
     subplot = subplot_map[int(algo_num)]
 
-    # Loop through alphabet sizes
+    # Itérer sur les tailles de l'alphabet
     for size in alphabet_sizes:
-        # Read CSV file for this algorithm number and alphabet size into DataFrame
+        # Lire le fichier CSV pour ce numéro d'algorithme et cette taille d'alphabet dans un DataFrame
         df = pd.read_csv(f"{csv_dir}/averageTimes-{algo_num}-{size}.csv")
 
-        # Add line plot for this alphabet size to subplot
+        # Ajouter un graphique pour cette taille d'alphabet au subplot
         fig2.add_scatter(
             x=df["word_length"],
             y=df["average_time"],
