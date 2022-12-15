@@ -335,3 +335,81 @@ int naifSentinelleStrncmp(char* text, char* word, int textLength, int wordLength
     // Le mot n'a pas été trouvé, on renvoie -1.
     return -1;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Fonction qui recherche un mot dans un texte, en utilisant l'algorithme
+ * Knuth-Morris-Pratt.
+ * Renvoie l'indice du premier caractère du mot dans le texte, si le mot est
+ * trouvé, -1 sinon.
+ * 
+ * @param text texte dans lequel rechercher le mot.
+ * @param word mot à rechercher dans le texte.
+ * @param textLength longueur du texte.
+ * @param wordLength longueur du mot.
+ * @param prefixes tableau de préfixes pour le mot.
+ * @return l'indice du premier caractère du mot dans le texte, si le mot est
+ *         trouvé, -1 sinon, ou -2 en cas d'erreur.
+ */
+int kmp(char* text, char* word, int textLength, int wordLength, int* prefixes) {
+    // Test d'erreur. Si le texte ou le mot est NULL, on renvoie -2.
+    if (text == NULL || word == NULL) {
+        return -2;
+    }
+
+    // Test d'erreur. Si le mot est plus long que le texte, on renvoie -1.
+    if (wordLength > textLength) {
+        return -1;
+    }
+
+    // Recherche du mot dans le texte.
+    int j = 0;
+    for (int i = 0; i < textLength; i++) {
+        while (j > 0 && text[i] != word[j]) {
+            j = prefixes[j - 1];
+        }
+        if (text[i] == word[j]) {
+            j++;
+        }
+        if (j == wordLength) {
+            // Le mot a été trouvé, on renvoie l'indice du premier caractère
+            // du mot dans le texte.
+            return i - wordLength + 1;
+        }
+    }
+
+    // Le mot n'a pas été trouvé, on renvoie -1.
+    return -1;
+}
+
+/**
+ * Fonction de calcul des préfixes pour un mot. Les préfixes sont stockés dans
+ * un tableau passé en paramètre.
+ * 
+ * @param word mot pour lequel on veut calculer les préfixes.
+ * @param wordLength longueur du mot.
+ * @param prefixes tableau de préfixes pour le mot.
+ * @return 0 si tout s'est bien passé, -1 sinon.
+ */
+int computePrefixes(char* word, int wordLength, int* prefixes) {
+    // Test d'erreur. Si le mot est NULL, on renvoie -1.
+    if (word == NULL) {
+        return -1;
+    }
+
+    // Calcul des préfixes.
+    prefixes[0] = 0;
+    int j = 0;
+    for (int i = 1; i < wordLength; i++) {
+        while (j > 0 && word[i] != word[j]) {
+            j = prefixes[j - 1];
+        }
+        if (word[i] == word[j]) {
+            j++;
+        }
+        prefixes[i] = j;
+    }
+
+    return 0;
+}

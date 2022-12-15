@@ -161,6 +161,45 @@ int runAlgo(int (*algo)(char*, char*, int, int), char* text, char* word, int tex
 }
 
 /**
+ * Même fonction que runAlgo, mais pour kmp(char* text, char* word,
+ * int textLength, int wordLength, int* prefixes).
+ * reçoit en plus le tableau des préfixes du mot.
+ * 
+ * @param text texte dans lequel chercher le mot.
+ * @param word mot à chercher dans le texte.
+ * @param textLength longueur du texte.
+ * @param wordLength longueur du mot.
+ * @param prefixes tableau des préfixes du mot.
+ * @return 0 en cas de succès, -1 sinon.
+ */
+int runKmp(char* text, char* word, int textLength, int wordLength, int* prefixes) {
+    // Initialisation de l'indice de la première occurrence.
+    int index = 0;
+    // Tant qu'on trouve une occurrence, on décale l'indice de la première
+    // occurrence
+    for (int i = 0; i < textLength - wordLength + 1; i++) {
+        // Appel de l'algorithme.
+        index = kmp(text + i, word, textLength - i, wordLength, prefixes);
+        // Test d'erreur. Si l'algorithme a échoué, on renvoie -1.
+        if (index == -2) {
+            return -1;
+        }
+        // Si l'algorithme a trouvé une occurrence, on décale l'indice de la
+        // première occurrence.
+        if (index != -1) {
+            i += index;
+        }
+        // Si aucune occurrence n'a été trouvée, on sort de la boucle.
+        else {
+            break;
+        }
+    }
+    // Succès, on renvoie 0.
+    return 0;
+}
+
+
+/**
  * Fonction qui calcule la moyenne des valeurs contenues dans le tableau
  * values, et renvoie cette moyenne.
  * 
@@ -223,6 +262,57 @@ double measureTime(int (*algo)(char*, char*, int, int), FILE* file, char* text, 
     // On renvoie la moyenne des temps d'exécution
     return computeAverage(times, wordListLength);
 }
+
+/**
+ * Même fonction que measureTime, mais pour KMP, donc utilise la fonction
+ * runKmp.
+ * Calcule les préfixes pour le passer à runKmp en utilisant computePrefixes.
+ * 
+ * @param algo algorithme de recherche exacte à utiliser.
+ * @param file pointeur de fichier vers le fichier contenant la liste de mots.
+ * @param text texte dans lequel chercher les mots de la liste.
+ * @param textLength longueur du texte.
+ * @param wordListLength longueur de la liste de mots.
+ * @param wordLength longueur des mots de la liste.
+ * @return temps moyen d'exécution de l'algorithme (en ms) en cas de succès,
+ * -1 sinon.
+ */
+double measureTimeKmp(FILE* file, char* text, int textLength, int wordListLength, int wordLength) {
+    // Initialisations
+    int err = 0;
+    // Tableau de temps d'exécution
+    double times[wordListLength];
+    // Tableau de préfixes
+    int prefixes[wordLength];
+
+    // On lit chaque mot de la liste
+    for (int i = 0; i < wordListLength; i++) {
+        // On lit le mot
+        char word[wordLength + 1];
+        if (fgets(word, wordLength + 1, file) == NULL) {
+            return -1;
+        }
+        // On calcule les préfixes
+        err = computePrefixes(word, wordLength, prefixes);
+        // Test d'erreur
+        if (err == -1) {
+            return -1;
+        }
+        // On mesure le temps d'exécution de l'algorithme
+        clock_t start = clock();
+        err = runKmp(text, word, textLength, wordLength, prefixes);
+        clock_t end = clock();
+        // Test d'erreur
+        if (err == -1) {
+            return -1;
+        }
+        // On stocke le temps d'exécution dans le tableau
+        times[i] = (double) (end - start) / CLOCKS_PER_SEC * 1000;
+    }
+    // On renvoie la moyenne des temps d'exécution
+    return computeAverage(times, wordListLength);
+}
+
 
 /**
  * Fonction qui lit la liste de mots dans le fichier demo_wordList.txt, et
@@ -310,6 +400,18 @@ int testAlgos(char* text, int textLength, int wordListLength, int wordLength) {
     // Mesure du temps d'exécution de l'algorithme naïf avec strncmp, avec boucle rapide, avec sentinelle.
     printf("Algo naïf avec strncmp, avec boucle rapide, avec sentinelle : ");
     err = measureTime(&naifSentinelleStrncmp, file, text, textLength, wordListLength, wordLength);
+    // Test d'erreur. Si la mesure a échoué, on renvoie -1.
+    if (err == -1) {
+        return -1;
+    }
+    // Affichage du temps d'exécution.
+    printf("%f (ms)\n", err);
+    // On revient au début du fichier.
+    rewind(file);
+
+    // Mesure du temps d'exécution de l'algorithme KMP.
+    printf("Algo KMP : ");
+    err = measureTimeKmp(file, text, textLength, wordListLength, wordLength);
     // Test d'erreur. Si la mesure a échoué, on renvoie -1.
     if (err == -1) {
         return -1;
