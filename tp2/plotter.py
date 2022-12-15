@@ -27,6 +27,7 @@ fig = make_subplots(
         "Naïf, strncmp",
         "Naïf, boucle rapide, strncmp",
         "Naïf, boucle rapide, sentinelle, strncmp",
+        "KMP"
     ],
     # x_title="Alphabet size",
     # y_title="Average time (s)",
@@ -79,6 +80,7 @@ fig2 = make_subplots(
         "Naïf, strncmp",
         "Naïf, boucle rapide, strncmp",
         "Naïf, boucle rapide, sentinelle, strncmp",
+        "KMP"
     ],
     # x_title="Alphabet size",
     # y_title="Average time (s)",
