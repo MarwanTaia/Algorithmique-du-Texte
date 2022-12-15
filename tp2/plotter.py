@@ -16,7 +16,8 @@ subplot_titles_list = [
     "Naïf, boucle rapide, strncmp",
     "Naïf, boucle rapide, sentinelle, strncmp",
     "MP",
-    "KMP"
+    "KMP",
+    "Boyer-Moore",
 ]
 
 # Mapping from algorithm number to subplot number
@@ -29,7 +30,7 @@ alphabet_sizes = [2, 4, 20, 70]
 
 # Create figure with subplots
 fig = make_subplots(
-    rows=3,
+    rows=4,
     cols=3,
     subplot_titles=subplot_titles_list,
     # x_title="Alphabet size",
