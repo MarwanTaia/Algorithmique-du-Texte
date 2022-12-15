@@ -515,12 +515,12 @@ int knuthMorrisPratt(char* text, char* word, int textLength, int wordLength, int
  * @return 0 en cas de succès, -1 en cas d'erreur.
  */
 void suffTable(char* word, int wordLength, int* suff) {
-    // Initialize the suffix table with the default values.
+    // Initialisation de la table Suff.
     for (int i = 0; i < wordLength; i++) {
         suff[i] = wordLength;
     }
 
-    // Compute the suffix table for the word.
+    // Calcul de la table Suff.
     for (int i = wordLength - 2; i >= 0; i--) {
         int j = i;
         while (j >= 0 && word[j] == word[wordLength - 1 - i + j]) {
@@ -540,12 +540,12 @@ void suffTable(char* word, int wordLength, int* suff) {
  * @return 0 en cas de succès, -1 en cas d'erreur.
  */
 void bonSuffTable(char* word, int wordLength, int* bonSuff) {
-    // Initialize the bad-character table with the default values.
+    // Initialisation de la table BonSuff.
     for (int i = 0; i < 256; i++) {
         bonSuff[i] = wordLength;
     }
 
-    // Compute the bad-character table for the word.
+    // Calcul de la table BonSuff.
     for (int i = 0; i < wordLength - 1; i++) {
         bonSuff[(int) word[i]] = wordLength - 1 - i;
     }
@@ -564,31 +564,30 @@ void bonSuffTable(char* word, int wordLength, int* bonSuff) {
  *         is found, or -1 if the word is not found.
  */
 int boyerMoore(char* text, int textLength, char* word, int wordLength, int* suff, int* bonSuff) {
-    // Start at the last character of the word.
+    // Commencer à la fin du mot.
     int i = wordLength - 1;
-    // Loop while there are still characters to check in the text.
+    // Tant qu'on n'est pas arrivé à la fin du texte.
     while (i < textLength) {
-        // Start at the last character of the word.
+        // Commencer à la fin du mot.
         int j = wordLength - 1;
-        // Loop while the characters match.
+        // Tant qu'on n'est pas arrivé au début du mot et que le caractère
         while (j >= 0 && text[i] == word[j]) {
             // Move to the previous character.
             i--;
             j--;
         }
-        // If the whole word has been checked, return the index of the first
-        // character of the word in the text.
+        // Si on est arrivé au début du mot, le mot a été trouvé.
         if (j == -1) {
             return i + 1;
         }
-        // Move to the next character in the text.
+        // Sinon, on décale le mot de suff[j] caractères.
         if (bonSuff[(int) text[i]] > suff[j]) {
             i += bonSuff[(int) text[i]];
         } else {
             i += suff[j];
         }
     }
-    // The word was not found.
+    // Le mot n'a pas été trouvé.
     return -1;
 }
 
@@ -602,12 +601,12 @@ int boyerMoore(char* text, int textLength, char* word, int wordLength, int* suff
  * @param dernOcc table dernOcc dans laquelle stocker les résultats.
  */
 void dernOccTable(char* word, int wordLength, int* dernOcc) {
-    // Initialize the table with the default values.
+    // Initialiser la table dernOcc.
     for (int i = 0; i < 256; i++) {
         dernOcc[i] = wordLength;
     }
 
-    // Compute the table for the word from right to left.
+    // Calculer la table dernOcc.
     for (int i = wordLength - 2; i >= 0; i--) {
         dernOcc[(int) word[i]] = wordLength - 1 - i;
     }
