@@ -8,9 +8,20 @@ from plotly.subplots import make_subplots
 # Directory containing the CSV files
 csv_dir = "output"
 
+subplot_titles_list = [
+    "Naïf",
+    "Naïf, boucle rapide",
+    "Naïf, boucle rapide, sentinelle",
+    "Naïf, strncmp",
+    "Naïf, boucle rapide, strncmp",
+    "Naïf, boucle rapide, sentinelle, strncmp",
+    "MP",
+    "KMP"
+]
+
 # Mapping from algorithm number to subplot number
 subplot_map = {}
-for i in range(1, 8):
+for i in range(1, len(subplot_titles_list) + 1):
     subplot_map[i] = i
 
 # Alphabet sizes to plot
@@ -20,21 +31,13 @@ alphabet_sizes = [2, 4, 20, 70]
 fig = make_subplots(
     rows=3,
     cols=3,
-    subplot_titles=[
-        "Naïf",
-        "Naïf, boucle rapide",
-        "Naïf, boucle rapide, sentinelle",
-        "Naïf, strncmp",
-        "Naïf, boucle rapide, strncmp",
-        "Naïf, boucle rapide, sentinelle, strncmp",
-        "KMP"
-    ],
+    subplot_titles=subplot_titles_list,
     # x_title="Alphabet size",
     # y_title="Average time (s)",
 )
 
 # Loop through algorithm numbers
-for algo_num in range(1, 8):
+for algo_num in range(1, len(subplot_titles_list) + 1):
     # Create subplot for this algorithm number
     subplot = subplot_map[int(algo_num)]
 
@@ -73,21 +76,13 @@ fig.show()
 fig2 = make_subplots(
     rows=3,
     cols=3,
-    subplot_titles=[
-        "Naïf",
-        "Naïf, boucle rapide",
-        "Naïf, boucle rapide, sentinelle",
-        "Naïf, strncmp",
-        "Naïf, boucle rapide, strncmp",
-        "Naïf, boucle rapide, sentinelle, strncmp",
-        "KMP"
-    ],
+    subplot_titles=subplot_titles_list,
     # x_title="Alphabet size",
     # y_title="Average time (s)",
 )
 
 # Loop through algorithm numbers
-for algo_num in range(1, 8):
+for algo_num in range(1, len(subplot_titles_list) + 1):
     # Create subplot for this algorithm number
     subplot = subplot_map[int(algo_num)]
 
