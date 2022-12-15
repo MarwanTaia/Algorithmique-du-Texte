@@ -13,7 +13,7 @@ word_lengths=(4 5 6 7 8 9 10 15 20 30 40 50)
 list_length=100
 
 # La liste des numéros d'algorithmes à utiliser
-algo_nums=(1 2 3 4 5 6 7 8 9)
+algo_nums=(1 2 3 4 5 6 7 8 9 10 11)
 
 # Le nom du répertoire de sortie
 output_dir="output"

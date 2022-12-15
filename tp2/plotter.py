@@ -18,6 +18,7 @@ subplot_titles_list = [
     "MP",
     "KMP",
     "Boyer-Moore",
+    "Horspool"
 ]
 
 # Mapping from algorithm number to subplot number
@@ -83,7 +84,7 @@ fig2 = make_subplots(
 )
 
 # Loop through algorithm numbers
-for algo_num in range(1, len(subplot_titles_list) + 1):
+for algo_num in range(1, len(subplot_titles_list)):
     # Create subplot for this algorithm number
     subplot = subplot_map[int(algo_num)]
 
@@ -105,7 +106,8 @@ for algo_num in range(1, len(subplot_titles_list) + 1):
         )
         fig2.update_xaxes(title_text="Longueur du mot")
         fig2.update_yaxes(title_text="Temps moyen (ms)")
-        fig2.update_yaxes(range=[0, 0.7])
+        if algo_num <= 6:
+            fig2.update_yaxes(range=[0, 0.7])
 
 # Update layout
 fig2.update_layout(

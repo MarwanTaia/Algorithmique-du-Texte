@@ -591,3 +591,67 @@ int boyerMoore(char* text, int textLength, char* word, int wordLength, int* suff
     // The word was not found.
     return -1;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+/*
+ * Fonction qui calcule la table dernOcc de Horspool.
+ *
+ * @param word mot pour lequel calculer la table dernOcc.
+ * @param wordLength longueur du mot.
+ * @param dernOcc table dernOcc dans laquelle stocker les résultats.
+ */
+void dernOccTable(char* word, int wordLength, int* dernOcc) {
+    // Initialize the table with the default values.
+    for (int i = 0; i < 256; i++) {
+        dernOcc[i] = wordLength;
+    }
+
+    // Compute the table for the word from right to left.
+    for (int i = wordLength - 2; i >= 0; i--) {
+        dernOcc[(int) word[i]] = wordLength - 1 - i;
+    }
+}
+
+/*
+ * Fonction qui recherche le mot word dans le texte text en utilisant l'algorithme
+ * de Horspool.
+ *
+ * @param text le texte dans lequel rechercher le mot.
+ * @param textLength la longueur du texte.
+ * @param word le mot à rechercher dans le texte.
+ * @param wordLength la longueur du mot.
+ * @param dernOcc la table dernOcc pour le mot.
+ * @return l'indice du premier caractère du mot dans le texte, si le mot est
+ *        trouvé, ou -1 si le mot n'est pas trouvé.
+ */
+int horspool(char* text, int textLength, char* word, int wordLength, int* dernOcc) {
+    // Test d'erreur. Si le mot est plus long que le texte, on renvoie -1.
+    if (wordLength > textLength) {
+        return -1;
+    }
+
+    // Recherche du mot dans le texte en utilisant la table dernOcc.
+    // From the last character of the word.
+    int i = wordLength - 1;
+    // While there are still characters to check in the text.
+    while (i < textLength) {
+        // From the last character of the word.
+        int j = wordLength - 1;
+        // While the characters match.
+        while (j >= 0 && text[i] == word[j]) {
+            // Move to the previous character.
+            i--;
+            j--;
+        }
+        // If the whole word has been checked, return the index of the first
+        // character of the word in the text.
+        if (j == -1) {
+            return i + 1;
+        }
+        // Move to the next character in the text.
+        i += dernOcc[(int) text[i]];
+    }
+    // The word was not found.
+    return -1;
+}
