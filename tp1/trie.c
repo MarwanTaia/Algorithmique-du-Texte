@@ -40,7 +40,7 @@ int length(unsigned char *word) {
     return i;
 }
 
-#if HASH == 1
+#if HASH == 0
 
 // Structure d'un noeud du trie à table de transitions
 struct _trie {
@@ -303,6 +303,8 @@ Trie createTrie(int maxNode) {
         perror("Erreur d'allocation mémoire");
         return NULL;
     }
+    // Initialiser la liste de table de hachage avec NULL
+    memset(trie->transition, 0, (size_t) (maxNode * FILL_RATE * sizeof(List)));
     // États terminaux
     trie->finite = malloc((size_t) (maxNode * FILL_RATE * sizeof(char)));
     // Test d'erreur
@@ -310,13 +312,11 @@ Trie createTrie(int maxNode) {
         perror("Erreur d'allocation mémoire");
         return NULL;
     }
-    // Initialisation des états terminaux
-    for (int i = 0; i < FILL_RATE * maxNode; i++) {
-        trie->transition[i] = NULL;
-        trie->finite[i] = 0;
-    }
+    // Initialiser les états terminaux avec 0
+    memset(trie->finite, 0, (size_t) (maxNode * FILL_RATE * sizeof(char)));
 
     return trie;
+
 }
 
 /**
