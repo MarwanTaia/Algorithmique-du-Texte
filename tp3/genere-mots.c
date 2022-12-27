@@ -25,7 +25,7 @@ char* generateWord(int minWordLength, int maxWordLength, int alphabetSize) {
 
     // Génération du mot.
     for (int i = 0; i < wordLength; i++) {
-        word[i] = (char) (rand() % alphabetSize + 'A');
+        word[i] = (char) (rand() % alphabetSize + '!');
     }
     // Insertion du caractère de fin de chaîne.
     word[wordLength] = '\0';
@@ -36,7 +36,7 @@ char* generateWord(int minWordLength, int maxWordLength, int alphabetSize) {
 int main(int argc, char** argv) {
     // Test du nombre d'arguments. Si le nombre d'arguments est incorrect, on
     // affiche un message d'erreur et on quitte.
-    if (argc != 4) {
+    if (argc != 5) {
         fprintf(stderr, "Usage: %s wordCount minWordLength maxWordLength alphabetSize\n", argv[0]);
         exit(1);
     }
