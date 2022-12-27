@@ -417,6 +417,7 @@ int enqueue(Queue q, int value) {
         q->capacity *= 2;
         // Réallouer la mémoire pour le tableau d'éléments
         q->array = realloc(q->array, (long unsigned int) q->capacity * sizeof(int));
+        //q->array = realloc(q->array, (long unsigned int) q->capacity * sizeof(int));
         // Test d'erreur
         if (q->array == NULL) {
             perror("Erreur d'allocation mémoire");
@@ -500,3 +501,24 @@ int computeSupplement(Trie trie, int root, int *supplement) {
     }
     return 0;
 }
+
+int countOcc(Trie trie, int root, int *supplement, unsigned char *word) {
+    int count = 0;
+    int currentNode = root;
+    int i = 0;
+    while (word[i] != '\0') {
+        int nextNode = trie->transition[currentNode][word[i]].targetNode;
+        if (nextNode == -1) {
+            currentNode = supplement[currentNode];
+            nextNode = trie->transition[currentNode][word[i]].targetNode;
+        }
+        if (trie->finite[nextNode]) {
+            count++;
+        }
+        currentNode = nextNode;
+        i++;
+    }
+    return count;
+}
+
+int main (void) {}
