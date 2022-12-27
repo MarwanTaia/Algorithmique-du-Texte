@@ -40,7 +40,7 @@ int length(unsigned char *word) {
     return i;
 }
 
-#if HASH == 0
+#if HASH == 1
 
 // Structure d'un noeud du trie à table de transitions
 struct _trie {
@@ -110,13 +110,14 @@ Trie createTrie(int maxNode) {
  * RETURN:
  *  0 si le mot a été ajouté, -2 si le trie est plein, -1 en cas d'erreur.
  */
-int addWord(Trie trie, unsigned char *word) {
+int insertInTrie(Trie trie, unsigned char *word) {
 
     // Indice du noeud courant
     int currentNode = 0;
 
-    // Parcours des caractères du mot
-    for (int i = 0; word[i] != 0; i++) {
+    // Parcours des caractères du mot jusqu'à la fin du préfixe
+    int i;
+    for (i = 0; word[i] != 0; i++) {
         // Si la transition n'existe pas, on la crée
         if (trie->transitions[currentNode][word[i]] == -1) {
             trie->transitions[currentNode][word[i]] = trie->nextNode;
@@ -126,10 +127,18 @@ int addWord(Trie trie, unsigned char *word) {
         currentNode = trie->transitions[currentNode][word[i]];
     }
 
+    // Insertion du suffixe
+    for (; word[i] != 0; i++) {
+        trie->transitions[currentNode][word[i]] = trie->nextNode;
+        trie->nextNode++;
+        currentNode = trie->transitions[currentNode][word[i]];
+    }
+
     // On marque le noeud comme terminal
     trie->finite[currentNode] = 1;
 
     return 0;
+
 }
 
 /**
