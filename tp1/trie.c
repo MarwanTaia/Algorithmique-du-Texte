@@ -91,13 +91,11 @@ Trie createTrie(int maxNode) {
             perror("Erreur d'allocation mémoire");
             return NULL;
         }
-        for (int j = 0; j < ALPHABET_SIZE; j++) {
-            trie->transitions[i][j] = -1;
-        }
+        // Initialisation de la ligne de la table de transitions à l'aide de memset
+        memset(trie->transitions[i], -1, ALPHABET_SIZE * sizeof(int));
         trie->finite[i] = 0;
     }
 
-    // Retour du trie
     return trie;
 }
 
