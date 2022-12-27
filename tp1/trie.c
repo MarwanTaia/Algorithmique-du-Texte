@@ -111,11 +111,6 @@ Trie createTrie(int maxNode) {
  *  0 si le mot a été ajouté, -2 si le trie est plein, -1 en cas d'erreur.
  */
 int addWord(Trie trie, unsigned char *word) {
-    // Vérification de la capacité du trie
-    int len = length(word);
-    if (trie->nextNode + len > trie->maxNode) {
-        return -2;
-    }
 
     // Indice du noeud courant
     int currentNode = 0;
@@ -327,12 +322,6 @@ Trie createTrie(int maxNode) {
  *  0 en cas de succès, -2 si le trie est plein, -1 sinon.
  */
 int insertInTrie(Trie trie, unsigned char *word) {
-    // Test si la capacité du trie permet d'ajouter le mot
-    int len = length(word);
-    if (trie->nextNode + len > trie->maxNode) {
-        perror("Le trie est plein");
-        return -2;
-    }
 
     int i = 0;
     int currentNode = hash(word[i], word, (int)(trie->maxNode * FILL_RATE));
