@@ -14,8 +14,6 @@
  * @return le mot généré.
  */
 char* generateWord(int minWordLength, int maxWordLength, int alphabetSize) {
-    // Initialisation de la fonction de génération de nombres aléatoires.
-    srand(time(NULL));
 
     // Allocation de la mémoire pour le mot.
     int wordLength = rand() % (maxWordLength - minWordLength + 1) + minWordLength;
@@ -44,7 +42,7 @@ int main(int argc, char** argv) {
     }
 
     // Initialisation du générateur de nombres aléatoires.
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
 
     // Récupération du nombre de mots à générer, de la longueur minimale et
     // maximale des mots et de la taille de l'alphabet.
@@ -62,7 +60,6 @@ int main(int argc, char** argv) {
     // Génération de la liste de mots.
     for (int i = 0; i < wordCount; i++) {
         // Génération d'un mot aléatoire de longueur aléatoire.
-        int wordLength = rand() % (maxWordLength - minWordLength + 1) + minWordLength;
         char* word = generateWord(minWordLength, maxWordLength, alphabetSize);
         // Test d'erreur. Si la génération d'un mot a échoué, on quitte.
         if (word == NULL) {
