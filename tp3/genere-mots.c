@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
     for (int i = 0; i < wordCount; i++) {
         // Génération d'un mot aléatoire de longueur aléatoire.
         int wordLength = rand() % (maxWordLength - minWordLength + 1) + minWordLength;
-        char* word = generateWord(wordLength, alphabetSize);
+        char* word = generateWord(minWordLength, maxWordLength, alphabetSize);
         // Test d'erreur. Si la génération d'un mot a échoué, on quitte.
         if (word == NULL) {
             fprintf(stderr, "Erreur lors de la génération d'un mot.\n");
