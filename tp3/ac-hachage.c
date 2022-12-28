@@ -130,18 +130,7 @@ Trie createTrie(int maxNode) {
     }
     // Initialiser les états terminaux avec 0
     memset(trie->finite, 0, (size_t) (maxNode * FILL_RATE * sizeof(char)));
-
-    // Initialiser le champ supplement avec NULL
-    trie->supplement = malloc((size_t) (maxNode * FILL_RATE * sizeof(int)));
-    // Test d'erreur
-    if (trie->supplement == NULL) {
-        perror("Erreur d'allocation mémoire");
-        return NULL;
-    }
-    // Initialiser les suppléants avec -1
-    memset(trie->supplement, -1, (size_t) (maxNode * FILL_RATE * sizeof(int)));
-
-
+    
     return trie;
 
 }
