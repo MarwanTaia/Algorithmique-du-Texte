@@ -60,7 +60,7 @@ struct _trie {
     int maxNode; // Nombre maximal de noeuds du trie
     int nextNode; // Indice du prochain noeud disponible
     List *transition; // listes d'adjacence
-    char *finite; // États terminaux  
+    char *finite; // États terminaux
 };
 
 typedef struct _trie *Trie;
@@ -130,6 +130,17 @@ Trie createTrie(int maxNode) {
     }
     // Initialiser les états terminaux avec 0
     memset(trie->finite, 0, (size_t) (maxNode * FILL_RATE * sizeof(char)));
+
+    // Initialiser le champ supplement avec NULL
+    trie->supplement = malloc((size_t) (maxNode * FILL_RATE * sizeof(int)));
+    // Test d'erreur
+    if (trie->supplement == NULL) {
+        perror("Erreur d'allocation mémoire");
+        return NULL;
+    }
+    // Initialiser les suppléants avec -1
+    memset(trie->supplement, -1, (size_t) (maxNode * FILL_RATE * sizeof(int)));
+
 
     return trie;
 
@@ -354,171 +365,3 @@ unsigned char *suffix(unsigned char *word, int n) {
 // ALGORITHME
 ////////////////////////////////////////////////////////////////////////////////
 
-#define QUEUE_INITIAL_CAPACITY 16
-
-// Structure de file
-struct _queue {
-    int* array; // Tableau contenant les éléments de la file
-    int size; // Nombre d'éléments dans la file
-    int capacity; // Capacité de la file (nombre maximal d'éléments qu'elle peut contenir)
-    int head; // Position du premier élément de la file (indice dans le tableau array)
-    int tail; // Position de la fin de la file (indice dans le tableau array)
-};
-
-typedef struct _queue *Queue;
-
-/**
- * DESCRIPTION:
- *  Création d'une file.
- * ARGUMENTS:
- *  void.
- * RETURN:
- *  Une file vide.
- *  NULL en cas d'erreur.
- */
-Queue createQueue() {
-    // Allouer la mémoire pour la file
-    Queue q = malloc(sizeof(struct _queue));
-    // Test d'erreur
-    if (q == NULL) {
-        perror("Erreur d'allocation mémoire");
-        return NULL;
-    }
-
-    // Allouer la mémoire pour le tableau d'éléments
-    q->array = malloc(QUEUE_INITIAL_CAPACITY * sizeof(int));
-    // Test d'erreur
-    if (q->array == NULL) {
-        perror("Erreur d'allocation mémoire");
-        return NULL;
-    }
-
-    // Initialiser les champs de la file
-    q->size = 0;
-    q->capacity = QUEUE_INITIAL_CAPACITY;
-    q->head = 0;
-    q->tail = 0;
-
-    return q;
-}
-
-/**
- * DESCRIPTION:
- *  Destruction d'une file.
- * ARGUMENTS:
- *  Queue q : une file.
- * RETURN:
- *  void.
- */
-int enqueue(Queue q, int value) {
-    // Vérifier si la file est pleine
-    if (q->size == q->capacity) {
-        // Doubler la capacité de la file
-        q->capacity *= 2;
-        // Réallouer la mémoire pour le tableau d'éléments
-        q->array = realloc(q->array, (long unsigned int) q->capacity * sizeof(int));
-        //q->array = realloc(q->array, (long unsigned int) q->capacity * sizeof(int));
-        // Test d'erreur
-        if (q->array == NULL) {
-            perror("Erreur d'allocation mémoire");
-            return -1;
-        }
-    }
-
-    // Enfiler l'élément
-    q->array[q->tail] = value;
-    q->tail = (q->tail + 1) % q->capacity;
-    q->size++;
-
-    return 0;
-}
-
-/**
- * DESCRIPTION:
- *  Défilement d'un élément.
- * ARGUMENTS:
- *  Queue q : une file.
- * RETURN:
- *  La valeur de l'élément défilé.
- *  -1 en cas d'erreur.
- */
-int dequeue(Queue q) {
-    // Vérifier si la file est vide
-    if (q->size == 0) {
-        return -1;
-    }
-
-    // Défiler l'élément
-    int value = q->array[q->head];
-    q->head = (q->head + 1) % q->capacity;
-    q->size--;
-
-    return value;
-}
-
-
-/**
- * DESCRIPTION:
- *  Destruction d'une file.
- * ARGUMENTS:
- *  Queue q : une file.
- * RETURN:
- *  void.
- */
-void destroyQueue(Queue q) {
-    // Libérer la mémoire allouée pour le tableau d'éléments
-    free(q->array);
-    // Libérer la mémoire allouée pour la file
-    free(q);
-}
-
-int computeSupplement(Trie trie, int root, int *supplement) {
-    Queue q = createQueue();
-    if (q == NULL) {
-        return -1;
-    }
-    if (enqueue(q, root) != 0) {
-        return -1;
-    }
-    while (q->size > 0) {
-        int node = dequeue(q);
-        if (node == -1) {
-            return -1;
-        }
-        List currentList = trie->transition[node];
-        while (currentList != NULL) {
-            int childNode = currentList->targetNode;
-            if (supplement[childNode] == -1) {
-                //supplement[childNode] = trie->transition[supplement[node]][currentList->letter]->targetNode;
-                supplement[childNode] = trie->transition[supplement[node]][currentList->letter].targetNode;
-                //supplement[childNode] = node;
-            }
-            if (enqueue(q, childNode) != 0) {
-                return -1;
-            }
-            currentList = currentList->next;
-        }
-    }
-    return 0;
-}
-
-int countOcc(Trie trie, int root, int *supplement, unsigned char *word) {
-    int count = 0;
-    int currentNode = root;
-    int i = 0;
-    while (word[i] != '\0') {
-        int nextNode = trie->transition[currentNode][word[i]].targetNode;
-        if (nextNode == -1) {
-            currentNode = supplement[currentNode];
-            nextNode = trie->transition[currentNode][word[i]].targetNode;
-        }
-        if (trie->finite[nextNode]) {
-            count++;
-        }
-        currentNode = nextNode;
-        i++;
-    }
-    return count;
-}
-
-int main (void) {}
