@@ -49,9 +49,11 @@
 struct _list {
     int startNode; // État de départ de la transition
     int targetNode; // Cible de la transition
+    int failNode; // Noeud de suppléant
     unsigned char letter; // Etiquette de la transition
     struct _list *next; // Maillon suivant
 };
+
 
 typedef struct _list *List;
 
@@ -60,7 +62,8 @@ struct _trie {
     int maxNode; // Nombre maximal de noeuds du trie
     int nextNode; // Indice du prochain noeud disponible
     List *transition; // listes d'adjacence
-    char *finite; // États terminaux
+    int *failNode; // Noeuds de suppléant
+    char *finite; // États terminaux  
 };
 
 typedef struct _trie *Trie;
