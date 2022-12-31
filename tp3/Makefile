@@ -7,9 +7,9 @@ CFLAGS = -std=c18 -Wpedantic -Wall -Wextra -Wconversion -Wwrite-strings\
 
 LDFLAGS = -Wl,-z,relro,-z,now -pie
 
-OBJECTS = genere-texte.o genere-mots.o ac-hachage.o
+OBJECTS = genere-texte.o genere-mots.o ac-hachage.o ac-matrice.o
 
-PROGS = genere-texte genere-mots ac-hachage
+PROGS = genere-texte genere-mots ac-hachage ac-matrice
 
 all: $(PROGS)
 
@@ -20,6 +20,9 @@ genere-mots: genere-mots.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 ac-hachage: ac-hachage.o
+	$(CC) $(LDFLAGS) -o $@ $^
+
+ac-matrice: ac-matrice.o
 	$(CC) $(LDFLAGS) -o $@ $^
 
 clean:
